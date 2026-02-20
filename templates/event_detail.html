@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}{{ event.name }} &mdash; Vrijwilligers Aanmelding{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Organisaties</a></li>
+    <li class="breadcrumb-item active">{{ event.name }}</li>
+  </ol>
+</nav>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h1 class="h3 mb-1">{{ event.name }}</h1>
+    <p class="text-muted mb-1">
+      <i class="bi bi-calendar3"></i> {{ event.date.strftime('%A %d %B %Y') }}
+      {% if event.location %}
+        &nbsp;&bull;&nbsp; <i class="bi bi-geo-alt"></i> {{ event.location }}
+      {% endif %}
+    </p>
+    {% if event.description %}
+      <p class="mt-2 mb-0">{{ event.description }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if event.shifts %}
+  {% for shift in event.shifts %}
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="bi bi-clock"></i>
+          {{ shift.name }}
+          <span class="fw-normal small ms-2">{{ shift.start_time }} &ndash; {{ shift.end_time }}</span>
+        </h5>
+      </div>
+      <div class="card-body p-0">
+        {% if shift.tasks %}
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Taak</th>
+                  <th>Omschrijving</th>
+                  <th class="text-center">Plekken</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in shift.tasks %}
+                  <tr class="{% if task.is_full %}table-secondary{% endif %}">
+                    <td class="fw-semibold">{{ task.name }}</td>
+                    <td class="text-muted small">{{ task.description or '—' }}</td>
+                    <td class="text-center">
+                      {% if task.is_full %}
+                        <span class="badge bg-danger">Vol</span>
+                      {% else %}
+                        <span class="badge bg-success">{{ task.spots_left }} vrij</span>
+                      {% endif %}
+                      <small class="text-muted d-block">{{ task.registrations|length }}/{{ task.max_volunteers }}</small>
+                    </td>
+                    <td class="text-end">
+                      {% if not task.is_full %}
+                        <a href="{{ url_for('register', task_id=task.id) }}"
+                           class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-plus-circle"></i> Aanmelden
+                        </a>
+                      {% else %}
+                        <button class="btn btn-sm btn-secondary" disabled>Vol</button>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% if task.registrations %}
+                    <tr class="bg-light">
+                      <td colspan="4" class="py-1 ps-4">
+                        <small class="text-muted">
+                          <i class="bi bi-people"></i>
+                          {% for reg in task.registrations %}
+                            <span class="me-2">{{ reg.volunteer_name }}</span>
+                          {% endfor %}
+                        </small>
+                      </td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted p-3 mb-0">Nog geen taken voor deze dienst.</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-calendar-x display-4"></i>
+    <p class="mt-3">Er zijn nog geen diensten voor deze organisatie.</p>
+  </div>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+  <i class="bi bi-arrow-left"></i> Terug naar overzicht
+</a>
+{% endblock %}

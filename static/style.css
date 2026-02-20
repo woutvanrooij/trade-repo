@@ -1,0 +1,42 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.navbar-brand {
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+}
+
+.card {
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.card-header {
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+.table th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.progress {
+  border-radius: 10px;
+}
+
+footer {
+  font-size: 0.85rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 576px) {
+  .btn-group {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Beheer &mdash; Overzicht{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h2 mb-0"><i class="bi bi-gear text-primary"></i> Beheer</h1>
+  <a href="{{ url_for('admin_new_event') }}" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Nieuwe organisatie
+  </a>
+</div>
+
+{% if events %}
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Naam</th>
+            <th>Datum</th>
+            <th>Locatie</th>
+            <th class="text-center">Diensten</th>
+            <th class="text-center">Aanmeldingen</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+            <tr>
+              <td class="fw-semibold">{{ event.name }}</td>
+              <td>{{ event.date.strftime('%d-%m-%Y') }}</td>
+              <td class="text-muted">{{ event.location or '—' }}</td>
+              <td class="text-center">{{ event.shifts|length }}</td>
+              <td class="text-center">
+                <span class="badge bg-primary">{{ event.taken_spots }} / {{ event.total_spots }}</span>
+              </td>
+              <td class="text-end">
+                <div class="btn-group btn-group-sm">
+                  <a href="{{ url_for('admin_event_detail', event_id=event.id) }}"
+                     class="btn btn-outline-primary" title="Bewerken">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a href="{{ url_for('admin_registrations', event_id=event.id) }}"
+                     class="btn btn-outline-secondary" title="Aanmeldingen">
+                    <i class="bi bi-people"></i>
+                  </a>
+                  <a href="{{ url_for('admin_export_csv', event_id=event.id) }}"
+                     class="btn btn-outline-success" title="Exporteer CSV">
+                    <i class="bi bi-download"></i>
+                  </a>
+                  <form method="POST" action="{{ url_for('admin_delete_event', event_id=event.id) }}"
+                        onsubmit="return confirm('Weet je zeker dat je {{ event.name }} wilt verwijderen? Alle diensten en aanmeldingen worden ook verwijderd.')">
+                    <button type="submit" class="btn btn-outline-danger" title="Verwijderen">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% else %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-calendar-x display-4"></i>
+    <p class="mt-3">Nog geen organisaties aangemaakt.</p>
+    <a href="{{ url_for('admin_new_event') }}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Eerste organisatie aanmaken
+    </a>
+  </div>
+{% endif %}
+{% endblock %}
