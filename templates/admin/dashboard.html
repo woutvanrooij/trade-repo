@@ -18,7 +18,7 @@
             <th>Naam</th>
             <th>Datum</th>
             <th>Locatie</th>
-            <th class="text-center">Diensten</th>
+            <th class="text-center">Taken</th>
             <th class="text-center">Aanmeldingen</th>
             <th></th>
           </tr>
@@ -29,7 +29,7 @@
               <td class="fw-semibold">{{ event.name }}</td>
               <td>{{ event.date.strftime('%d-%m-%Y') }}</td>
               <td class="text-muted">{{ event.location or '—' }}</td>
-              <td class="text-center">{{ event.shifts|length }}</td>
+              <td class="text-center">{{ event.tasks|length }}</td>
               <td class="text-center">
                 <span class="badge bg-primary">{{ event.taken_spots }} / {{ event.total_spots }}</span>
               </td>
@@ -48,7 +48,7 @@
                     <i class="bi bi-download"></i>
                   </a>
                   <form method="POST" action="{{ url_for('admin_delete_event', event_id=event.id) }}"
-                        onsubmit="return confirm('Weet je zeker dat je {{ event.name }} wilt verwijderen? Alle diensten en aanmeldingen worden ook verwijderd.')">
+                        onsubmit="return confirm('Weet je zeker dat je {{ event.name }} wilt verwijderen? Alle taken, shifts en aanmeldingen worden ook verwijderd.')">
                     <button type="submit" class="btn btn-outline-danger" title="Verwijderen">
                       <i class="bi bi-trash"></i>
                     </button>

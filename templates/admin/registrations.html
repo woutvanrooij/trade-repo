@@ -20,9 +20,9 @@
 </div>
 
 {% set total_regs = namespace(count=0) %}
-{% for shift in event.shifts %}
-  {% for task in shift.tasks %}
-    {% set total_regs.count = total_regs.count + task.registrations|length %}
+{% for task in event.tasks %}
+  {% for shift in task.shifts %}
+    {% set total_regs.count = total_regs.count + shift.registrations|length %}
   {% endfor %}
 {% endfor %}
 
@@ -32,27 +32,25 @@
     <p class="mt-3">Nog geen aanmeldingen voor deze organisatie.</p>
   </div>
 {% else %}
-  {% for shift in event.shifts %}
-    {% set shift_regs = [] %}
-    {% for task in shift.tasks %}
-      {% if task.registrations %}
-        {% set shift_regs = shift_regs + task.registrations %}
-      {% endif %}
+  {% for task in event.tasks %}
+    {% set task_has_regs = namespace(v=false) %}
+    {% for shift in task.shifts %}
+      {% if shift.registrations %}{% set task_has_regs.v = true %}{% endif %}
     {% endfor %}
-    {% if shift_regs %}
+    {% if task_has_regs.v %}
       <h5 class="mt-4 mb-2 text-primary">
-        <i class="bi bi-clock"></i> {{ shift.name }}
-        <small class="text-muted fw-normal">{{ shift.start_time }} &ndash; {{ shift.end_time }}</small>
+        <i class="bi bi-check2-square"></i> {{ task.name }}
+        {% if task.description %}
+          <small class="text-muted fw-normal ms-1">{{ task.description }}</small>
+        {% endif %}
       </h5>
-      {% for task in shift.tasks %}
-        {% if task.registrations %}
+      {% for shift in task.shifts %}
+        {% if shift.registrations %}
           <div class="card shadow-sm mb-3">
             <div class="card-header">
-              <strong>{{ task.name }}</strong>
-              <span class="badge bg-primary ms-2">{{ task.registrations|length }} / {{ task.max_volunteers }}</span>
-              {% if task.description %}
-                <small class="text-muted ms-2">{{ task.description }}</small>
-              {% endif %}
+              <strong><i class="bi bi-clock me-1"></i>{{ shift.name }}</strong>
+              <span class="text-muted ms-2 small">{{ shift.start_time }} &ndash; {{ shift.end_time }}</span>
+              <span class="badge bg-primary ms-2">{{ shift.registrations|length }} / {{ shift.max_volunteers }}</span>
             </div>
             <div class="table-responsive">
               <table class="table table-sm table-hover mb-0">
@@ -66,7 +64,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for reg in task.registrations %}
+                  {% for reg in shift.registrations %}
                     <tr>
                       <td>{{ reg.volunteer_name }}</td>
                       <td><a href="mailto:{{ reg.volunteer_email }}">{{ reg.volunteer_email }}</a></td>

@@ -33,66 +33,70 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 class="h4 mb-0">Diensten</h2>
-  <a href="{{ url_for('admin_new_shift', event_id=event.id) }}" class="btn btn-primary btn-sm">
-    <i class="bi bi-plus-lg"></i> Dienst toevoegen
+  <h2 class="h4 mb-0">Taken</h2>
+  <a href="{{ url_for('admin_new_task', event_id=event.id) }}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Taak toevoegen
   </a>
 </div>
 
-{% if event.shifts %}
-  {% for shift in event.shifts %}
+{% if event.tasks %}
+  {% for task in event.tasks %}
     <div class="card shadow-sm mb-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <div>
-          <strong>{{ shift.name }}</strong>
-          <span class="text-muted ms-2">{{ shift.start_time }} &ndash; {{ shift.end_time }}</span>
+          <strong><i class="bi bi-check2-square me-1"></i>{{ task.name }}</strong>
+          {% if task.description %}
+            <span class="text-muted ms-2 small">{{ task.description }}</span>
+          {% endif %}
         </div>
         <div class="d-flex gap-1">
-          <a href="{{ url_for('admin_new_task', shift_id=shift.id) }}" class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-plus"></i> Taak
+          <a href="{{ url_for('admin_new_shift', task_id=task.id) }}" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-plus"></i> Shift
           </a>
-          <a href="{{ url_for('admin_edit_shift', shift_id=shift.id) }}" class="btn btn-sm btn-outline-secondary">
+          <a href="{{ url_for('admin_edit_task', task_id=task.id) }}" class="btn btn-sm btn-outline-secondary">
             <i class="bi bi-pencil"></i>
           </a>
-          <form method="POST" action="{{ url_for('admin_delete_shift', shift_id=shift.id) }}"
-                onsubmit="return confirm('Dienst en alle bijbehorende taken en aanmeldingen verwijderen?')">
+          <form method="POST" action="{{ url_for('admin_delete_task', task_id=task.id) }}"
+                onsubmit="return confirm('Taak en alle bijbehorende shifts en aanmeldingen verwijderen?')">
             <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
           </form>
         </div>
       </div>
 
-      {% if shift.tasks %}
+      {% if task.shifts %}
         <div class="table-responsive">
           <table class="table table-hover mb-0">
             <thead class="table-light">
               <tr>
-                <th>Taak</th>
-                <th>Omschrijving</th>
+                <th>Shift</th>
+                <th class="text-center">Tijdstip</th>
                 <th class="text-center">Max vrijwilligers</th>
                 <th class="text-center">Aangemeld</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {% for task in shift.tasks %}
+              {% for shift in task.shifts %}
                 <tr>
-                  <td class="fw-semibold">{{ task.name }}</td>
-                  <td class="text-muted small">{{ task.description or '—' }}</td>
-                  <td class="text-center">{{ task.max_volunteers }}</td>
+                  <td class="fw-semibold">{{ shift.name }}</td>
+                  <td class="text-center text-muted small">
+                    <i class="bi bi-clock"></i> {{ shift.start_time }} &ndash; {{ shift.end_time }}
+                  </td>
+                  <td class="text-center">{{ shift.max_volunteers }}</td>
                   <td class="text-center">
-                    {% if task.is_full %}
-                      <span class="badge bg-danger">{{ task.registrations|length }}</span>
+                    {% if shift.is_full %}
+                      <span class="badge bg-danger">{{ shift.registrations|length }}</span>
                     {% else %}
-                      <span class="badge bg-success">{{ task.registrations|length }}</span>
+                      <span class="badge bg-success">{{ shift.registrations|length }}</span>
                     {% endif %}
                   </td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm">
-                      <a href="{{ url_for('admin_edit_task', task_id=task.id) }}" class="btn btn-outline-secondary">
+                      <a href="{{ url_for('admin_edit_shift', shift_id=shift.id) }}" class="btn btn-outline-secondary">
                         <i class="bi bi-pencil"></i>
                       </a>
-                      <form method="POST" action="{{ url_for('admin_delete_task', task_id=task.id) }}"
-                            onsubmit="return confirm('Taak en alle aanmeldingen verwijderen?')">
+                      <form method="POST" action="{{ url_for('admin_delete_shift', shift_id=shift.id) }}"
+                            onsubmit="return confirm('Shift en alle aanmeldingen verwijderen?')">
                         <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
                       </form>
                     </div>
@@ -104,17 +108,17 @@
         </div>
       {% else %}
         <div class="card-body text-muted">
-          Nog geen taken voor deze dienst.
-          <a href="{{ url_for('admin_new_task', shift_id=shift.id) }}">Taak toevoegen</a>
+          Nog geen shifts voor deze taak.
+          <a href="{{ url_for('admin_new_shift', task_id=task.id) }}">Shift toevoegen</a>
         </div>
       {% endif %}
     </div>
   {% endfor %}
 {% else %}
   <div class="text-center py-4 text-muted">
-    <p>Nog geen diensten voor deze organisatie.</p>
-    <a href="{{ url_for('admin_new_shift', event_id=event.id) }}" class="btn btn-primary btn-sm">
-      <i class="bi bi-plus-lg"></i> Eerste dienst toevoegen
+    <p>Nog geen taken voor deze organisatie.</p>
+    <a href="{{ url_for('admin_new_task', event_id=event.id) }}" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-lg"></i> Eerste taak toevoegen
     </a>
   </div>
 {% endif %}

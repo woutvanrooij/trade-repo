@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Organisaties &mdash; Vrijwilligers Aanmelding{% endblock %}
+{% block title %}Organisaties &mdash; {{ settings.club_name }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -11,57 +11,55 @@
     {% for event in events %}
       {% set past = event.date < now %}
       <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm {% if past %}opacity-75{% endif %}">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title mb-0">{{ event.name }}</h5>
-              {% if past %}
-                <span class="badge bg-secondary">Afgelopen</span>
-              {% else %}
-                <span class="badge bg-success">Aankomend</span>
-              {% endif %}
-            </div>
-            <p class="text-muted small mb-1">
-              <i class="bi bi-calendar3"></i>
-              {{ event.date.strftime('%d %B %Y') }}
-            </p>
-            {% if event.location %}
-              <p class="text-muted small mb-2">
-                <i class="bi bi-geo-alt"></i> {{ event.location }}
+        <a href="{{ url_for('event_detail', event_id=event.id) }}" class="text-decoration-none text-dark">
+          <div class="card h-100 shadow-sm event-card {% if past %}opacity-75{% endif %}">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title mb-0">{{ event.name }}</h5>
+                {% if past %}
+                  <span class="badge bg-secondary">Afgelopen</span>
+                {% else %}
+                  <span class="badge bg-success">Aankomend</span>
+                {% endif %}
+              </div>
+              <p class="text-muted small mb-1">
+                <i class="bi bi-calendar3"></i>
+                {{ event.date.strftime('%d %B %Y') }}
               </p>
-            {% endif %}
-            {% if event.description %}
-              <p class="card-text small">{{ event.description }}</p>
-            {% endif %}
+              {% if event.location %}
+                <p class="text-muted small mb-2">
+                  <i class="bi bi-geo-alt"></i> {{ event.location }}
+                </p>
+              {% endif %}
+              {% if event.description %}
+                <p class="card-text small">{{ event.description }}</p>
+              {% endif %}
 
-            {% set total = event.total_spots %}
-            {% set taken = event.taken_spots %}
-            {% if total > 0 %}
-              <div class="mt-3">
-                <div class="d-flex justify-content-between small text-muted mb-1">
-                  <span>{{ taken }} / {{ total }} vrijwilligers</span>
-                  <span>{% if total - taken == 0 %}Vol{% else %}{{ total - taken }} plekken vrij{% endif %}</span>
-                </div>
-                <div class="progress" style="height: 6px;">
-                  <div class="progress-bar {% if taken == total %}bg-danger{% elif taken / total > 0.75 %}bg-warning{% else %}bg-success{% endif %}"
-                       role="progressbar"
-                       style="width: {{ (taken / total * 100)|int }}%">
+              {% set total = event.total_spots %}
+              {% set taken = event.taken_spots %}
+              {% if total > 0 %}
+                <div class="mt-3">
+                  <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>{{ taken }} / {{ total }} vrijwilligers</span>
+                    <span>{% if total - taken == 0 %}Vol{% else %}{{ total - taken }} plekken vrij{% endif %}</span>
+                  </div>
+                  <div class="progress" style="height: 6px;">
+                    <div class="progress-bar {% if taken == total %}bg-danger{% elif total > 0 and taken / total > 0.75 %}bg-warning{% else %}bg-success{% endif %}"
+                         role="progressbar"
+                         style="width: {{ (taken / total * 100)|int if total > 0 else 0 }}%">
+                    </div>
                   </div>
                 </div>
-              </div>
-            {% endif %}
-          </div>
-          <div class="card-footer bg-transparent">
-            <a href="{{ url_for('event_detail', event_id=event.id) }}"
-               class="btn btn-primary btn-sm w-100">
-              {% if past %}
-                <i class="bi bi-eye"></i> Bekijk diensten
-              {% else %}
-                <i class="bi bi-pencil-square"></i> Aanmelden
               {% endif %}
-            </a>
+            </div>
+            <div class="card-footer bg-transparent text-end">
+              <small class="text-muted">
+                <i class="bi bi-arrow-right-circle"></i>
+                {% if past %}Bekijk diensten{% else %}Bekijk &amp; aanmelden{% endif %}
+              </small>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
     {% endfor %}
   </div>

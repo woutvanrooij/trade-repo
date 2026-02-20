@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Aanmelden voor {{ task.name }}{% endblock %}
+{% block title %}Aanmelden voor {{ shift.task.name }} &mdash; {{ shift.name }}{% endblock %}
 
 {% block content %}
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Organisaties</a></li>
     <li class="breadcrumb-item">
-      <a href="{{ url_for('event_detail', event_id=task.shift.event_id) }}">
-        {{ task.shift.event.name }}
+      <a href="{{ url_for('event_detail', event_id=shift.task.event_id) }}">
+        {{ shift.task.event.name }}
       </a>
     </li>
     <li class="breadcrumb-item active">Aanmelden</li>
@@ -17,20 +17,24 @@
 <div class="row justify-content-center">
   <div class="col-md-6">
     <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header text-white" style="background-color: {{ settings.primary_color }};">
         <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Aanmelden als vrijwilliger</h5>
       </div>
       <div class="card-body">
-        <div class="alert alert-info mb-4">
-          <strong>{{ task.shift.event.name }}</strong><br>
-          <i class="bi bi-calendar3"></i> {{ task.shift.event.date.strftime('%d %B %Y') }}<br>
-          <i class="bi bi-clock"></i> {{ task.shift.name }}: {{ task.shift.start_time }} &ndash; {{ task.shift.end_time }}<br>
-          <i class="bi bi-check2-square"></i> Taak: <strong>{{ task.name }}</strong>
-          {% if task.description %}
-            <br><small class="text-muted">{{ task.description }}</small>
-          {% endif %}
-          <br><small class="text-muted">Nog {{ task.spots_left }} plek(ken) beschikbaar</small>
+        <div class="alert alert-info mb-3">
+          <strong>{{ shift.task.event.name }}</strong><br>
+          <i class="bi bi-calendar3"></i> {{ shift.task.event.date.strftime('%d %B %Y') }}<br>
+          <i class="bi bi-check2-square"></i> Taak: <strong>{{ shift.task.name }}</strong><br>
+          <i class="bi bi-clock"></i> {{ shift.name }}: {{ shift.start_time }} &ndash; {{ shift.end_time }}<br>
+          <small class="text-muted">Nog {{ shift.spots_left }} plek(ken) beschikbaar</small>
         </div>
+
+        {% if settings.volunteer_message %}
+          <div class="alert alert-warning d-flex align-items-center gap-2 mb-4">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>{{ settings.volunteer_message }}</span>
+          </div>
+        {% endif %}
 
         <form method="POST">
           <div class="mb-3">
@@ -48,14 +52,14 @@
           <div class="mb-4">
             <label for="phone" class="form-label">Telefoonnummer <small class="text-muted">(optioneel)</small></label>
             <input type="tel" class="form-control" id="phone" name="phone"
-                   placeholder="06-12345678"
+                   placeholder="0472 12 34 56"
                    value="{{ request.form.get('phone', '') }}">
           </div>
           <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">
               <i class="bi bi-check-circle"></i> Aanmelden
             </button>
-            <a href="{{ url_for('event_detail', event_id=task.shift.event_id) }}"
+            <a href="{{ url_for('event_detail', event_id=shift.task.event_id) }}"
                class="btn btn-outline-secondary">Annuleren</a>
           </div>
         </form>

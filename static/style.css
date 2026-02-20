@@ -2,6 +2,16 @@ body {
   background-color: #f8f9fa;
 }
 
+.event-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+}
+
 .navbar-brand {
   font-size: 1.1rem;
   letter-spacing: 0.02em;
