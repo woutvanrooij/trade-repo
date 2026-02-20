@@ -34,7 +34,7 @@
 {% if event.tasks %}
   {% for task in event.tasks %}
     <div class="card shadow-sm mb-4">
-      <div class="card-header" style="background-color: {{ settings.primary_color }};" class="text-white">
+      <div class="card-header task-card-header">
         <h5 class="mb-0 text-white">
           <i class="bi bi-check2-square"></i> {{ task.name }}
           {% if task.description %}

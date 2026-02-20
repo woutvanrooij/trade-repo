@@ -10,15 +10,17 @@
   <style>
     :root {
       --club-primary: {{ settings.primary_color }};
+      --club-secondary: {{ settings.secondary_color }};
     }
+
+    /* ── Primary colour overrides ── */
     .bg-primary { background-color: {{ settings.primary_color }} !important; }
     .btn-primary {
       background-color: {{ settings.primary_color }} !important;
       border-color: {{ settings.primary_color }} !important;
+      color: #fff !important;
     }
-    .btn-primary:hover, .btn-primary:focus {
-      filter: brightness(0.88);
-    }
+    .btn-primary:hover, .btn-primary:focus { filter: brightness(0.88); }
     .btn-outline-primary {
       color: {{ settings.primary_color }} !important;
       border-color: {{ settings.primary_color }} !important;
@@ -29,12 +31,44 @@
     }
     .text-primary { color: {{ settings.primary_color }} !important; }
     .border-primary { border-color: {{ settings.primary_color }} !important; }
-    .badge.bg-primary { background-color: {{ settings.primary_color }} !important; }
-    .progress-bar.bg-primary { background-color: {{ settings.primary_color }} !important; }
     .card-header.bg-primary { background-color: {{ settings.primary_color }} !important; }
     a { color: {{ settings.primary_color }}; }
     a:hover { filter: brightness(0.8); }
     .btn { text-decoration: none !important; }
+
+    /* ── Secondary colour overrides ── */
+    .badge.bg-success  { background-color: {{ settings.secondary_color }} !important; color: #fff; }
+    .badge.bg-primary  { background-color: {{ settings.secondary_color }} !important; color: #fff; }
+    .progress-bar      { background-color: {{ settings.secondary_color }} !important; }
+    .badge.bg-secondary-club {
+      background-color: {{ settings.secondary_color }} !important;
+      color: #fff;
+    }
+    .navbar-accent-bar {
+      height: 4px;
+      background-color: {{ settings.secondary_color }};
+    }
+    .task-card-header {
+      background-color: {{ settings.primary_color }};
+      border-left: 5px solid {{ settings.secondary_color }} !important;
+      color: #fff;
+    }
+    .btn-secondary-club {
+      background-color: {{ settings.secondary_color }} !important;
+      border-color: {{ settings.secondary_color }} !important;
+      color: #fff !important;
+    }
+    .btn-secondary-club:hover { filter: brightness(0.88); }
+    footer.site-footer {
+      border-top: 3px solid {{ settings.secondary_color }} !important;
+    }
+    .event-card:hover {
+      border-left: 4px solid {{ settings.secondary_color }} !important;
+    }
+    .badge.bg-aankomend {
+      background-color: {{ settings.secondary_color }} !important;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -73,6 +107,7 @@
       </div>
     </div>
   </nav>
+  <div class="navbar-accent-bar"></div>
 
   <div class="container my-4">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -87,7 +122,7 @@
     {% block content %}{% endblock %}
   </div>
 
-  <footer class="text-center text-muted py-4 mt-5 border-top">
+  <footer class="site-footer text-center text-muted py-4 mt-5">
     <small>
       {{ settings.footer_text }}
       {% if settings.club_website %}

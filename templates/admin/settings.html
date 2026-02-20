@@ -44,21 +44,43 @@
             {% endif %}
           </div>
 
-          <div class="mb-4">
-            <label for="primary_color" class="form-label">Primaire kleur</label>
-            <div class="d-flex align-items-center gap-3">
-              <input type="color" class="form-control form-control-color" id="primary_color"
-                     name="primary_color" value="{{ s.primary_color }}" style="width: 60px;">
-              <input type="text" class="form-control" id="primary_color_hex"
-                     value="{{ s.primary_color }}" maxlength="7" placeholder="#1a6e2e"
-                     oninput="document.getElementById('primary_color').value=this.value">
+          <div class="row mb-3">
+            <div class="col">
+              <label for="primary_color" class="form-label">Primaire kleur</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" class="form-control form-control-color" id="primary_color"
+                       name="primary_color" value="{{ s.primary_color }}" style="width: 56px; height: 38px;">
+                <input type="text" class="form-control" id="primary_color_hex"
+                       value="{{ s.primary_color }}" maxlength="7" placeholder="#1a6e2e"
+                       oninput="document.getElementById('primary_color').value=this.value">
+              </div>
+              <div class="form-text">Navbar, knoppen, taakkoppen.</div>
             </div>
-            <div class="form-text">Kleur voor de navigatiebalk, knoppen en accenten.</div>
+            <div class="col">
+              <label for="secondary_color" class="form-label">Secundaire kleur</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" class="form-control form-control-color" id="secondary_color"
+                       name="secondary_color" value="{{ s.secondary_color }}" style="width: 56px; height: 38px;">
+                <input type="text" class="form-control" id="secondary_color_hex"
+                       value="{{ s.secondary_color }}" maxlength="7" placeholder="#f5a623"
+                       oninput="document.getElementById('secondary_color').value=this.value">
+              </div>
+              <div class="form-text">Badges, accentbalk, voettekstlijn.</div>
+            </div>
+          </div>
+
+          <div class="mb-4 p-3 rounded" style="background: linear-gradient(135deg, {{ s.primary_color }} 50%, {{ s.secondary_color }} 50%);">
+            <small class="text-white fw-semibold" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+              Kleurvoorbeeld
+            </small>
           </div>
 
           <script>
             document.getElementById('primary_color').addEventListener('input', function() {
               document.getElementById('primary_color_hex').value = this.value;
+            });
+            document.getElementById('secondary_color').addEventListener('input', function() {
+              document.getElementById('secondary_color_hex').value = this.value;
             });
           </script>
 

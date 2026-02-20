@@ -29,6 +29,7 @@ class SiteSettings(db.Model):
     club_website = db.Column(db.String(200), default='')
     logo_url = db.Column(db.String(500), default='')
     primary_color = db.Column(db.String(20), default='#1a6e2e')
+    secondary_color = db.Column(db.String(20), default='#f5a623')
     volunteer_message = db.Column(db.Text, default='Wees steeds aanwezig een kwartier voor uw shift.')
     footer_text = db.Column(db.String(200), default='Vrijwilligers Aanmelding \u2014 Arendonk Sport')
 
@@ -222,6 +223,7 @@ def admin_settings():
         s.club_website = request.form.get('club_website', '').strip()
         s.logo_url = request.form.get('logo_url', '').strip()
         s.primary_color = request.form.get('primary_color', '#1a6e2e').strip()
+        s.secondary_color = request.form.get('secondary_color', '#f5a623').strip()
         s.volunteer_message = request.form.get('volunteer_message', '').strip()
         s.footer_text = request.form.get('footer_text', '').strip()
         db.session.commit()
@@ -446,6 +448,12 @@ def admin_export_csv(event_id):
 
 with app.app_context():
     db.create_all()
+    # Migrate: add columns that may be missing from older databases
+    with db.engine.connect() as conn:
+        existing = [row[1] for row in conn.execute(db.text("PRAGMA table_info(site_settings)"))]
+        if 'secondary_color' not in existing:
+            conn.execute(db.text("ALTER TABLE site_settings ADD COLUMN secondary_color VARCHAR(20) DEFAULT '#f5a623'"))
+            conn.commit()
     SiteSettings.get()
 
 
